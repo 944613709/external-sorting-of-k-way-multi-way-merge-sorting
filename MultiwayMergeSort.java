@@ -12,7 +12,7 @@ public class MultiwayMergeSort {
     public static void main(String[] args) {
         List<Record> records = readRecordsFromFile("records.bin");
         long startTime = System.currentTimeMillis();
-        List<Record> sortedRecords = multiwayMergeSort(records, 4);
+        List<Record> sortedRecords = firstSort(records, 4);
         long endTime = System.currentTimeMillis();
         System.out.println("Sorted records: " + sortedRecords);
         System.out.println("Time taken: " + (endTime - startTime) + " ms");
@@ -41,7 +41,7 @@ public class MultiwayMergeSort {
      * @param k       分块数量
      * @return 排序后的记录列表
      */
-    public static List<Record> multiwayMergeSort(List<Record> records, int k) {
+    public static List<Record> firstSort(List<Record> records, int k) {
         if (records == null || records.size() <= 1 || k <= 0) {
             return records;
         }
@@ -51,7 +51,7 @@ public class MultiwayMergeSort {
             k = n;
         }
 
-        // 将记录分为k个块，对每个块进行排序
+        // 模拟第一趟排序，将记录分为k个块，对每个块进行排序，形成初始归并段
         List<List<Record>> chunks = new ArrayList<>(k);
         int chunkSize = (int) Math.ceil((double) n / k);
 
@@ -61,25 +61,28 @@ public class MultiwayMergeSort {
             List<Record> chunk = records.subList(start, end);
             chunk.sort(Comparator.comparing(Record::getA));
             chunks.add(chunk);
+            //把初始归并段chunk,写入二进制文件
+            RecordManager.writeRecordsToFile(chunk, "chunk_" + i + ".bin");
         }
 
-        // 归并排序后的块
+        // 归并排序后的初始归并段，形成最后的排序结果
         return mergeKSortedLists(chunks);
     }
 
     /**
-     * 对多个有序升序记录列表进行归并排序
+     * 利用败者树，对多个有序升序记录列表进行归并
      *
-     * @param chunks 要排序的块
+     * @param chunks_input 要排序的块
      * @return 排序后的记录列表
      */
     public static List<Record> mergeKSortedLists(List<List<Record>> chunks_input) {
         //用败者树实现
         ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-        int chunkId = 1;
+        int chunkId = 0;
         for (List<Record> chunk : chunks_input) {
             chunks.add(new Chunk(chunk, chunkId++));
         }
+
 
         List<Record> result = new ArrayList<>();
         //初始化败者树
@@ -88,6 +91,7 @@ public class MultiwayMergeSort {
         while (true) {
             Chunk minChunk = chunks.get(loserTree.getWinnerChunkIndex());
             Record minRecord = minChunk.poll();
+            //minChunk.poll()会导致chunks中的chunk发生变化，所以需要重新获取minChunk？？
             result.add(minRecord);
             int chunkIndex = loserTree.getWinnerChunkIndex();
             //如果该chunk为空，则去除该chunk

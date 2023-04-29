@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * 记录生成器类，用于生成随机记录并将其写入外部文件
  */
-public class RecordGenerator {
+public class RecordManager {
     public static void main(String[] args) {
         List<Record> records = generateRecords(100);
         System.out.println("records = " + records);

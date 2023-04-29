@@ -17,7 +17,7 @@ class Chunk{
     }
 
     public Chunk(List<Record> recordList, int chunkId) {
-        this.recordList = recordList;
+        this.recordList = new ArrayList<>(recordList);
         this.chunkId = chunkId;
     }
     private int chunkId =-1;//未赋值默认为-1
