@@ -17,7 +17,6 @@ public class MultiwayMergeSort {
         firstSort( 4,allRecordCount,loadMaxCountInMemory);
         mergeKSortedLists(4,allRecordCount,loadMaxCountInMemory);
         long endTime = System.currentTimeMillis();
-//        System.out.println("Sorted records: " + sortedRecords);
         System.out.println("Time taken: " + (endTime - startTime) + " ms");
         System.out.println("最终排序结果");
         RecordManager.printAllRecordsFromFile("output_records.bin");
@@ -116,16 +115,4 @@ public class MultiwayMergeSort {
         }
     }
 
-    /**
-     * 记录节点类，用于在优先队列中存储记录和所属的块
-     */
-    private static class RecordNode {
-        Record record;
-        int chunkIndex;
-
-        public RecordNode(Record record, int chunkIndex) {
-            this.record = record;
-            this.chunkIndex = chunkIndex;
-        }
-    }
 }
