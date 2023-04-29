@@ -1,14 +1,14 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h4>szf-lab2</h4>
- * <p></p>
+ * 模拟块（流的形式）
  *
  * @author : Fars
  * @date : 2023-04-27 23:31
  **/
-class Chunk{
+class Chunk implements Serializable {
     public Chunk() {
     }
 

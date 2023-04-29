@@ -63,59 +63,61 @@ public class LoserTree
     {
         return leaves.get(ls[0]);
     }
-//    public void adjust(int leafIndex)
-//    {
-//        // s指向当前的值最小的叶子结点（胜者）
-//        int parent = (leafIndex + size) / 2;// parent是leafIndex的双亲
-//
-//        while (parent > 0)// 沿从叶子到根的路径比较，直到根结点
-//        {
-//            if (leafIndex >= 0 && (ls[parent] == -1 || leaves.get(leafIndex).compareTo(leaves.get(ls[parent])) > 0))
-//            {
-//                // 将树中的当前结点指向其子树中值最小的叶子
-//                int tmp = leafIndex;
-//                leafIndex = ls[parent];
-//                ls[parent] = tmp;
-//            }
-//    }
 
-    public void adjust(int leafIndex)
-    {
+    public void adjust(int leafIndex) {
         // s指向当前的值最小的叶子结点（胜者）
         int parent = (leafIndex + size) / 2;// parent是leafIndex的双亲
 
         while (parent > 0)// 沿从叶子到根的路径比较，直到根结点
         {
-            int winnerIndex;
-            int loserIndex;
-            //如果是父节点ls[parent]为-1,代表还没有比赛过，应该要和兄弟比赛
-            if(ls[parent] == -1){
-                if (leaves.get(leafIndex).compareTo(leaves.get(leafIndex - 1)) < 0){
-                    winnerIndex = leafIndex;
-                    loserIndex = leafIndex - 1;
-                }
-                else{
-                    winnerIndex = leafIndex - 1;
-                    loserIndex = leafIndex;
-                }
+            if (leafIndex >= 0 && (ls[parent] == -1 || leaves.get(leafIndex).compareTo(leaves.get(ls[parent])) > 0)) {
+                // 将树中的当前结点指向其子树中值最小的叶子
+                int tmp = leafIndex;
+                leafIndex = ls[parent];
+                ls[parent] = tmp;
             }
-            //如果s战胜了父亲节点代表的leaf ( leave.get(s) < leaves.get(ls[parent]) )，那么胜者是s
-            else if(leaves.get(leafIndex).compareTo(leaves.get(ls[parent])) < 0){
-                winnerIndex= leafIndex;
-                loserIndex = ls[parent];
-            }
-            else{
-                winnerIndex = ls[parent];
-                loserIndex = leafIndex;
-            }
-            //将败者索引放到父亲节点
-            ls[parent] = loserIndex;
-            //将胜者继续向上比较
-            leafIndex = winnerIndex;
             parent /= 2;
         }
         ls[0] = leafIndex;// 树根指向胜者
     }
+
+    //这段代码有bug
+//    public void adjust(int leafIndex)
+//    {
+//        // s指向当前的值最小的叶子结点（胜者）
+//        int parent = (leafIndex + size) / 2;// parent是leafIndex的双亲
+//        int winnerIndex;
+//        int loserIndex;
+//        while (parent > 0)// 沿从叶子到根的路径比较，直到根结点
+//        {
+//            //如果是父节点ls[parent]为-1,代表还没有比赛过，应该要和兄弟比赛
+//            if(ls[parent] == -1){
+//                if (leaves.get(leafIndex).compareTo(leaves.get(leafIndex - 1)) < 0){
+//                    winnerIndex = leafIndex;
+//                    loserIndex = leafIndex - 1;
+//                }
+//                else{
+//                    winnerIndex = leafIndex - 1;
+//                    loserIndex = leafIndex;
+//                }
+//            }
+//            //如果s战胜了父亲节点代表的leaf ( leave.get(s) < leaves.get(ls[parent]) )，那么胜者是s
+//            else if(leaves.get(leafIndex).compareTo(leaves.get(ls[parent])) < 0){
+//                winnerIndex= leafIndex;
+//                loserIndex = ls[parent];
+//            }
+//            else{
+//                winnerIndex = ls[parent];
+//                loserIndex = leafIndex;
+//            }
+//            //将败者索引放到父亲节点
+//            ls[parent] = loserIndex;
+//            //将胜者继续向上比较
+//            leafIndex = winnerIndex;
+//            parent /= 2;
+//        }
+//        ls[0] = leafIndex;// 树根指向胜者
+//    }
 
     public static void main(String[] args) {
         //给定示例输入数据
@@ -128,8 +130,12 @@ public class LoserTree
         chunk2.add(new Record(4,"record_4"));
         chunk2.add(new Record(5,"record_5"));
         chunk2.add(new Record(6,"record_6"));
+
+        Chunk chunk3 = new Chunk(2);
+        chunk3.add(new Record(2,"record_2"));
         chunks.add(chunk1);
         chunks.add(chunk2);
+        chunks.add(chunk3);
         //利用败者树排序
         LoserTree loserTree = new LoserTree(chunks);
         //输出排序结果

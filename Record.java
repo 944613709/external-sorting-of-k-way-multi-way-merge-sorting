@@ -23,7 +23,6 @@ public class Record implements Serializable {
     public String toString() {
         return "Record{" +
                 "a=" + a +
-                ", b='" + b + '\'' +
                 '}';
     }
     //写compareTo
